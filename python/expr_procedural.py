@@ -35,8 +35,16 @@ def eval_expr(expr: Expr, env: Env) -> int:
    raise NotImplementedError("TODO: Implement eval_expr")
  
 def to_string(expr: Expr) -> str:
-   """Returns a fully-parenthesized string representation of the expression tree."""
-   raise NotImplementedError("TODO: Implement to_string")
+    """Converts an expression tree into a human-readable, fully-parenthesized string."""
+    if isinstance(expr, Num): #converts number to string
+        return str(expr.value)
+    elif isinstance(expr, Var): #variable already a string, so return the name
+        return expr.name
+    elif isinstance(expr, Add): #recursively call to_string on left and right children of Add node and format as "(left + right)"
+        return f"({to_string(expr.left)} + {to_string(expr.right)})"
+    elif isinstance(expr, Mul): #same logic as Add, but for multiplication
+        return f"({to_string(expr.left)} * {to_string(expr.right)})"
+    raise ValueError("Invalid expression type")
 
 def simplify(expr: Expr) -> Expr:
     """Simplifies an expression tree according to the specified algebraic rules."""
@@ -115,4 +123,3 @@ if __name__ == "__main__":
     expr4 = Add(Mul(Num(0), Var("a")), Mul(Num(1), Var("b")))  # Represents (0 * a) + (1 * b)
     simplified_expr4 = simplify(expr4)
     print(to_string(simplified_expr4))  # Expected output: "b"
-    
