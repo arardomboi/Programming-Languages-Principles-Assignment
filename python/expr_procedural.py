@@ -137,3 +137,22 @@ if __name__ == "__main__":
     print(to_string(expr4))  # Expected output: "((0 * a) + (1 * b))"
     simplified_expr4 = simplify(expr4)
     print(to_string(simplified_expr4))  # Expected output: "b"
+
+    #testing for eval_expr
+    env = {"x": 5, "y": 10, "z": 15, "a": 20, "b": 25}
+    print(eval_expr(expr1, env))  # Expected output: 5 (x = 5)
+    print(eval_expr(expr2, env))  # Expected output: 10 (y = 10)
+    print(eval_expr(expr3, env))  # Expected output: 0 (0 * z = 0)
+    print(eval_expr(expr4, env))  # Expected output: 25 (b = 25)
+
+    complex_expr = Add(Mul(Num(0), Var("x")), Add(Mul(Num(1), Var("y")), Num(0)))  # Represents (0 * x) + ((1 * y) + 0)
+    print(to_string(complex_expr))  # Expected output: "((0 * x) + ((1 * y) + 0))"
+    simplified_complex_expr = simplify(complex_expr)
+    print(to_string(simplified_complex_expr))  # Expected output: "y"
+    print(eval_expr(simplified_complex_expr, env))  # Expected output: 10 (y = 10)
+
+    complex_expr2 = Mul(Add(Num(0), Var("x")), Add(Num(1), Var("y")))  # Represents (0 + x) * (1 + y)
+    print(to_string(complex_expr2))  # Expected output: "((0 + x) * (1 + y))"
+    simplified_complex_expr2 = simplify(complex_expr2)
+    print(to_string(simplified_complex_expr2))  # Expected output: "(x * (1 + y))"
+    print(eval_expr(simplified_complex_expr2, env))  # Expected output: 55 (x = 5, y = 10, so 5 * (1 + 10) = 5 * 11 = 55)
