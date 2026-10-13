@@ -1,7 +1,8 @@
 -- Imports
 module Expr where
-    import Data.Map (Map)
-    import qualified Data.Map as Map
+
+import Data.Map (Map)
+import qualified Data.Map as Map
 
 data Expr
     = Num Int 
@@ -12,8 +13,7 @@ data Expr
 
 type Env = [(String, Int)]
  
--- Functions
-
+-- Function Stubs: Implement using pattern matching and recursion
 eval :: Env -> Expr -> Int
 eval env (Num n) = n --input is a number, return it
 eval env (Var v) = case lookup v env of --input is a variable, look it up in the environment
