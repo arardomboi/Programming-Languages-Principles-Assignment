@@ -40,28 +40,45 @@ def to_string(expr: Expr) -> str:
 
 def simplify(expr: Expr) -> Expr:
     """Simplifies an expression tree according to the specified algebraic rules."""
-    #Base Case, cannot simplify futher, i.e. a number of variable
+    # Base Case: Constants and variables cannot be simplified further
     if isinstance(expr, (Num, Var)):
         return expr
 
-    #Expr is type Add
+    # Bottom-Up Recursion
+    left_simp = simplify(expr.left)
+    right_simp = simplify(expr.right)
+
+    # Apply simplification rules for Add
     if isinstance(expr, Add):
-        if expr.left == Num(0):
-            return expr.right
-        if expr.right == Num(0):
-            return expr.left
+        # 0 + e -> e
+        if isinstance(left_simp, Num) and left_simp.value == 0:
+            return right_simp
+        # e + 0 -> e
+        if isinstance(right_simp, Num) and right_simp.value == 0:
+            return left_simp
         
-    #Expr is type Mul
-    if isinstance(expr, Mul):
-        if expr.left == Num(0) or expr.right == Num(0): #If either side is 0, return 0 as e x 0 // 0 x e = 0
+        # If no rules match, return the node with its simplified children
+        return Add(left_simp, right_simp)
+        
+    # Apply simplification rules for Mul
+    elif isinstance(expr, Mul):
+        # 0 * e -> 0 or e * 0 -> 0
+        if (isinstance(left_simp, Num) and left_simp.value == 0) or \
+           (isinstance(right_simp, Num) and right_simp.value == 0):
             return Num(0)
-        if expr.left == Num(1): #If expression is 1 x e, return e 
-            return expr.right
-        elif expr.right == Num(1): #If expression is e x 1, return e
-            return expr.left
-    raise NotImplementedError("TODO: Implement simplify")
-
-
+            
+        # 1 * e -> e
+        if isinstance(left_simp, Num) and left_simp.value == 1:
+            return right_simp
+        # e * 1 -> e
+        if isinstance(right_simp, Num) and right_simp.value == 1:
+            return left_simp
+            
+        # If no rules match, return the node with its simplified children
+        return Mul(left_simp, right_simp)
+        
+    else:
+        raise ValueError("Invalid expression type")
 """
 Core AST Operations
 Each solution must support four core operations across all three implementations:
