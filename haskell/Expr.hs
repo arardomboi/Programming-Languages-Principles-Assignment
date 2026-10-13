@@ -16,7 +16,12 @@ type Env = [(String, Int)]
  
 -- Function Stubs: Implement using pattern matching and recursion
 eval :: Env -> Expr -> Int
-eval = error "TODO: Implement eval"
+eval env (Num n) = n --input is a number, return it
+eval env (Var v) = case lookup v env of --input is a variable, look it up in the environment
+    Just n -> n
+    Nothing -> error $ "Variable " ++ v ++ " not found in environment."
+eval env (Add e1 e2) = eval env e1 + eval env e2 -- input is an addition, evaluate both sides recursively and return the sum
+eval env (Mul e1 e2) = eval env e1 * eval env e2 -- input is a multiplication, evaluate both sides recursively and return the product
  
 toString :: Expr -> String --Converts the AST to a string representation
 toString(Num n) = show n
