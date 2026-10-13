@@ -26,13 +26,23 @@ Env = Dict[str, int]
 
 # --- PROCEDURES --- 
 
-def construct_expr(expr_str: str) -> Expr:
-    """Build an expression tree representing a given mathematical expression."""
-    raise NotImplementedError("TODO: Implement construct_expr")
-
 def eval_expr(expr: Expr, env: Env) -> int:
-   """Evaluates an expression tree given a variable mapping environment."""
-   raise NotImplementedError("TODO: Implement eval_expr")
+    simplified_expr = simplify(expr)  # Simplify the expression first
+
+
+    if isinstance(simplified_expr, Num): #return its value
+        return simplified_expr.value
+    elif isinstance(simplified_expr, Var): #return its value
+        if simplified_expr.name in env:
+            return env[simplified_expr.name]
+        else:
+            raise ValueError(f"Variable '{simplified_expr.name}' not found in environment.")
+    elif isinstance(simplified_expr, Add): #recursively evaluate its left and right children and return their sum
+        return eval_expr(simplified_expr.left, env) + eval_expr(simplified_expr.right, env)
+    elif isinstance(simplified_expr, Mul): #recursively evaluate its left and right children and return their product
+        return eval_expr(simplified_expr.left, env) * eval_expr(simplified_expr.right, env)
+    raise ValueError("Invalid expression type")
+        
  
 def to_string(expr: Expr) -> str:
     """Converts an expression tree into a human-readable, fully-parenthesized string."""
