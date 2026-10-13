@@ -95,3 +95,24 @@ Note: Simplification must operate bottom-up recursively so that nested identitie
 simplify fully to y in a single call. Children must be simplified before evaluating the current node's algebraic 
 identities.
 """
+
+#testing
+
+if __name__ == "__main__":
+    # Example usage and testing of the simplify function
+    expr1 = Add(Num(0), Var("x"))  # Represents 0 + x
+    simplified_expr1 = simplify(expr1)
+    print(to_string(simplified_expr1))  # Expected output: "x"
+
+    expr2 = Mul(Num(1), Var("y"))  # Represents 1 * y
+    simplified_expr2 = simplify(expr2)
+    print(to_string(simplified_expr2))  # Expected output: "y"
+
+    expr3 = Mul(Num(0), Var("z"))  # Represents 0 * z
+    simplified_expr3 = simplify(expr3)
+    print(to_string(simplified_expr3))  # Expected output: "0"
+
+    expr4 = Add(Mul(Num(0), Var("a")), Mul(Num(1), Var("b")))  # Represents (0 * a) + (1 * b)
+    simplified_expr4 = simplify(expr4)
+    print(to_string(simplified_expr4))  # Expected output: "b"
+    
